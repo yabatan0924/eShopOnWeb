@@ -1,21 +1,22 @@
 name: eShopOnWeb Build and Test
 
 #Triggers (uncomment line below to use it)
-#on: [push, workflow_dispatch]
+on: [workflow_dispatch, push, pull_request]
 
 #Environment variables https://docs.github.com/en/actions/learn-github-actions/environment-variables
 env:
-  RESOURCE-GROUP: rg-eshoponweb-NAME
-  LOCATION: westeurope
-  TEMPLATE-FILE: infra/webapp.bicep
-  SUBSCRIPTION-ID: YOUR-SUBS-ID
-  WEBAPP-NAME: eshoponweb-webapp-NAME
-
+<<<<<< main
+  RESOURCE-GROUP: rg-eShopOnWeb-CICD-demo
+  LOCATION: usgovvirginia
+  TEMPLATE-FILE: .azure/bicep/webapp.bicep
+  SUBSCRIPTION-ID: d7369bdd-0354-4ae6-bc06-3c998e3ca255
+  WEBAPP-NAME: webapp-eShopOnJ6Cloud-demo
+>>>>>> main
 
 jobs:
   #Build, test and publish .net web project in repository
   buildandtest:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     #checkout the repository
     - uses: actions/checkout@v4
@@ -72,7 +73,9 @@ jobs:
     - name: Azure Login
       uses: azure/login@v2
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_CREDS }}
+        environment: 'AzureUSGovernment'
+        enable-AZPSSession: true
            
     # Deploy Azure WebApp using Bicep file
     - name: deploy
